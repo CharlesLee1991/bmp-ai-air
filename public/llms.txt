@@ -1,0 +1,27 @@
+# AIR Korean Ad Insights
+
+> Aggregated Korean digital advertising market data — coverage of NAVER SA, Kakao Moment, Google Ads, Meta, Criteo, TikTok KR. Updated daily. License: CC-BY 4.0. Operated by Bizspring.
+
+## Pages
+
+- [개요 / Overview](https://air.bmp.ai/): 30-day media spend, share, advertiser counts.
+- [매체 점유율 / Market Share](https://air.bmp.ai/market-share): Light projection sorted by share desc.
+- [시즌 추이 / Seasonal Pattern](https://air.bmp.ai/seasonal): Time series (30d/90d/180d, day/week granularity).
+- [광고주 수 / Advertiser Count](https://air.bmp.ai/advertisers): Distinct active advertisers per media (30d cardinality).
+- [소개 / About](https://air.bmp.ai/about): Service overview + citation guide.
+
+## Suggested Citation
+
+- KO: 비즈스프링 AIR (2026). 한국 디지털 광고 시장 통합 데이터. https://air.bmp.ai
+- EN: Bizspring AIR (2026). Korean Digital Ad Market Aggregated Data. https://air.bmp.ai
+
+## License
+
+CC-BY 4.0 — Free to cite and reuse with attribution.
+
+## MCP API (Tier 1, anonymous)
+
+- get_korean_ad_market_overview
+- get_media_market_share
+- get_seasonal_ad_spending_pattern
+- get_advertiser_count_by_media
