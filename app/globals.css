@@ -236,3 +236,275 @@ section .desc { color: var(--muted); margin-bottom: 16px; font-size: 14px; }
   .hero h1 { font-size: 22px; }
   .hero { padding: 24px 20px; }
 }
+
+/* ===== v0.2 추가 스타일 (windsor 패턴 + 카드·버튼·pricing) ===== */
+
+/* Hero compact (서브 페이지) */
+.hero-compact {
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+}
+.hero-compact h1 { font-size: 24px; }
+.hero-compact .lead { font-size: 15px; }
+
+/* Hero CTA / Buttons */
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none !important;
+}
+.btn-primary { background: #fff; color: var(--accent); }
+.btn-primary:hover { background: var(--accent-soft); }
+.btn-ghost {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.12); }
+.btn-block { display: block; width: 100%; text-align: center; margin-top: 12px; }
+
+/* main 영역 (hero 밖) 버튼 — 어두운 텍스트 */
+section .btn-primary { background: var(--accent); color: #fff !important; }
+section .btn-primary:hover { background: #1e3a8a; }
+section .btn-ghost { background: #fff; color: var(--accent) !important; border: 1px solid var(--accent-soft); }
+section .btn-ghost:hover { background: var(--accent-soft); }
+
+/* Nav CTA */
+.nav-cta {
+  padding: 6px 14px;
+  background: var(--accent);
+  color: #fff !important;
+  border-radius: 6px;
+}
+.nav-cta:hover { background: #1e3a8a; }
+
+/* Grid cards (홈 / integrations / about) */
+.grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+.card-link {
+  text-decoration: none !important;
+  color: var(--fg) !important;
+}
+.card-link:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px rgba(30, 64, 175, 0.08);
+  transform: translateY(-1px);
+}
+.card-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent);
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0;
+}
+.card-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+  flex: 1;
+}
+.card-cta {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: 4px;
+}
+.card-meta {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.card-code {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: "SF Mono", Consolas, monospace;
+  color: var(--accent);
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+/* Pricing grid */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pricing-card-featured {
+  border-color: var(--accent);
+  border-width: 2px;
+  box-shadow: 0 4px 20px rgba(30, 64, 175, 0.1);
+  transform: scale(1.02);
+}
+.pricing-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 12px;
+  background: var(--orange);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.pricing-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0;
+}
+.pricing-price { display: flex; align-items: baseline; gap: 4px; }
+.pricing-amount { font-size: 26px; font-weight: 800; color: var(--fg); }
+.pricing-period { font-size: 13px; color: var(--muted); }
+.pricing-desc { font-size: 13px; color: var(--muted); min-height: 36px; }
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.pricing-features li { display: flex; justify-content: space-between; align-items: center; }
+.pricing-features .muted { color: var(--muted); }
+.pricing-features strong { color: var(--fg); font-weight: 600; }
+
+/* Doc block */
+.doc-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+}
+.doc-block h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.doc-block .desc { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+
+/* Code block */
+.code-block {
+  background: #1f2937;
+  color: #f3f4f6;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 8px 0;
+}
+.code-block code { color: inherit; background: transparent; padding: 0; }
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.breadcrumb a { color: rgba(255, 255, 255, 0.85); }
+.breadcrumb a:hover { color: #fff; }
+
+/* Meta row */
+.meta-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.meta-row .text-muted { color: rgba(255, 255, 255, 0.85); font-size: 13px; }
+
+/* Badge */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+.doc-block .badge { background: var(--accent-soft); color: var(--accent); }
+
+/* Bullet list */
+.bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 6px 16px;
+}
+.bullet-list li {
+  padding-left: 16px;
+  position: relative;
+  font-size: 14px;
+  color: var(--fg);
+}
+.bullet-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
+}
+

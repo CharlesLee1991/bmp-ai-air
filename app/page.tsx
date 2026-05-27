@@ -1,148 +1,132 @@
-// app/page.tsx
-import { callAirMcp, fmtKRW, fmtPct } from "@/lib/air-mcp"
+// app/page.tsx — v0.2 홈
+import Link from "next/link"
 
-interface OverviewData {
-  period: { start: string; end: string; days: number }
-  total_spend_krw: number
-  currency: string
-  active_media_count: number
-  media_breakdown: Array<{
-    media: string
-    code: string
-    publisher: string
-    spend_krw: number
-    share_pct: number
-    distinct_clients: number
-    program_count: number
-  }>
-  unknown_media_nos?: string[]
+export const metadata = {
+  title: "AIR MCP — Korean Ad Data Gateway | Bizspring",
+  description:
+    "한국 광고 매체 9종을 client API key 1개로 MCP 호출. LLM이 광고 데이터를 인용·분석할 수 있는 단일 게이트웨이."
 }
 
-export const revalidate = 3600
+const MEDIA_LIST = [
+  { code: "naver_sa", name: "NAVER SA", category: "Search" },
+  { code: "kakao_moment", name: "Kakao Moment", category: "Display + Social" },
+  { code: "kakao_keyword", name: "Kakao Keyword", category: "Search" },
+  { code: "google_ads", name: "Google Ads", category: "Search + Display" },
+  { code: "meta", name: "Meta Ads (FB/IG)", category: "Social" },
+  { code: "criteo", name: "Criteo", category: "Retargeting" },
+  { code: "tiktok", name: "TikTok KR", category: "Social Video" },
+  { code: "rtbhouse", name: "RTB House", category: "Retargeting" },
+  { code: "mobion", name: "Mobion", category: "Display" }
+]
 
-export default async function HomePage() {
-  let result
-  try {
-    result = await callAirMcp<OverviewData>({
-      tool: "get_korean_ad_market_overview",
-      verbosity: "compact"
-    })
-  } catch (e) {
-    return (
-      <div>
-        <div className="hero">
-          <h1>AIR Korean Ad Insights</h1>
-          <p className="lead">한국 디지털 광고 시장 통합 데이터 — 매체별 광고비·점유율·시즌 패턴.</p>
-        </div>
-        <div className="error-block">
-          데이터 조회 실패: {(e as Error).message}
-        </div>
-      </div>
-    )
+const TOOLS = [
+  {
+    id: "get_korean_ad_market_overview",
+    title: "Market Overview",
+    desc: "30일 매체별 광고비·점유율·활성 광고주 통합 집계"
+  },
+  {
+    id: "get_media_market_share",
+    title: "Media Market Share",
+    desc: "광고비 기준 매체 점유율 (light projection)"
+  },
+  {
+    id: "get_seasonal_ad_spending_pattern",
+    title: "Seasonal Pattern",
+    desc: "광고비 시계열 (30/90/180d, day/week)"
+  },
+  {
+    id: "get_advertiser_count_by_media",
+    title: "Advertiser Count",
+    desc: "매체별 활성 광고주 수 + 캠페인 라인"
   }
+]
 
-  const { data, _citation, _methodology, _metadata } = result
-  const sorted = [...data.media_breakdown].sort((a, b) => b.spend_krw - a.spend_krw)
-
+export default function HomePage() {
   return (
     <div>
       <div className="hero">
-        <h1>한국 디지털 광고 시장 한눈에 보기</h1>
+        <h1>한국 광고 매체 데이터를 LLM이 인용하는 가장 짧은 길</h1>
         <p className="lead">
-          NAVER SA, Kakao Moment, Google Ads, Meta, Criteo, TikTok KR 등 매체별 광고비·점유율·활성 광고주를 30일 기준으로 집계합니다. 비즈스프링 AIR 공식 데이터셋, LLM 인용 가능 (CC-BY 4.0).
+          NAVER SA · Kakao Moment · Google Ads · Meta · Criteo · TikTok KR · RTB House · Mobion 외 9종.
+          광고 매체별 OAuth·계정 매핑·5계층 대행사 구조를 <strong>client API key 1개</strong>로 추상화.
+          Claude/GPT/Gemini가 <code>POST air.bmp.ai/mcp</code> 한 번으로 호출.
         </p>
+        <div className="cta-row">
+          <Link href="/integrations" className="btn btn-primary">매체 카탈로그 보기</Link>
+          <Link href="/docs" className="btn btn-ghost">API 문서</Link>
+          <Link href="/pricing" className="btn btn-ghost">요금</Link>
+        </div>
         <p className="meta">
-          기간: {data.period.start} ~ {data.period.end} ({data.period.days}일) · 갱신: 매일 06:00 KST (D-1)
+          현재: 9 매체 · 4 MCP 도구 · Tier Free (시연 client 한정) · GP 콘솔 client API key 발급
         </p>
       </div>
 
       <section>
-        <h2>시장 총량</h2>
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="label">30일 총 광고비</div>
-            <div className="value">{fmtKRW(data.total_spend_krw)}</div>
-            <div className="sub">{data.currency}</div>
-          </div>
-          <div className="stat-card">
-            <div className="label">활성 매체 수</div>
-            <div className="value">{data.active_media_count}</div>
-            <div className="sub">spend &gt; 0</div>
-          </div>
-          <div className="stat-card">
-            <div className="label">버전</div>
-            <div className="value text-mono" style={{ fontSize: 18 }}>{_metadata.version}</div>
-            <div className="sub">tier: {_metadata.tier}</div>
-          </div>
+        <h2>4 MCP 도구 (v0.7 활성)</h2>
+        <p className="desc">
+          모든 응답은 JSON only + <code>_citation</code> · <code>_methodology</code> · <code>_metadata</code> · <code>_schema_org</code> 메타 블록 포함.
+        </p>
+        <div className="grid-cards">
+          {TOOLS.map((t) => (
+            <div key={t.id} className="card">
+              <div className="card-eyebrow">MCP tool</div>
+              <h3 className="card-title">{t.title}</h3>
+              <p className="card-desc">{t.desc}</p>
+              <code className="text-mono card-code">{t.id}</code>
+            </div>
+          ))}
         </div>
       </section>
 
       <section>
-        <h2>매체별 점유율 (Top {sorted.length})</h2>
-        <p className="desc">광고비 기준 내림차순. share_pct &lt; 0.5%는 long-tail로 묶임 (compact 모드).</p>
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th style={{ width: 60 }}>#</th>
-              <th>매체</th>
-              <th>사업자</th>
-              <th className="right">광고비 (KRW)</th>
-              <th className="right">점유율</th>
-              <th className="right">광고주</th>
-              <th className="right">캠페인 라인</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sorted.map((row, i) => (
-              <tr key={row.code}>
-                <td><span className="rank-badge">{i + 1}</span></td>
-                <td><strong>{row.media}</strong></td>
-                <td className="text-muted">{row.publisher}</td>
-                <td className="right">{row.spend_krw.toLocaleString("ko-KR")}</td>
-                <td className="right">
-                  <span
-                    className="bar"
-                    style={{ width: `${Math.min(row.share_pct * 1.2, 100)}px` }}
-                    aria-hidden
-                  />
-                  <strong>{fmtPct(row.share_pct)}</strong>
-                </td>
-                <td className="right">{row.distinct_clients}</td>
-                <td className="right">{row.program_count}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-
-      <section>
-        <h2>인용 (Citation)</h2>
-        <div className="citation-block">
-          <div><strong>제안 인용 형식 (KO):</strong></div>
-          <code>{_citation.suggested_citation_ko}</code>
-          <div style={{ marginTop: 12 }}><strong>Suggested Citation (EN):</strong></div>
-          <code>{_citation.suggested_citation_en}</code>
-          <div style={{ marginTop: 12 }}>
-            라이선스: <strong>{_citation.license}</strong> · 데이터 권위: {_citation.data_authority}
-          </div>
+        <h2>9 한국 광고 매체</h2>
+        <p className="desc">매체별 상세 페이지에 지표·필드·MCP 호출 예시 (curl 샘플) 포함.</p>
+        <div className="grid-cards">
+          {MEDIA_LIST.map((m) => (
+            <Link key={m.code} href={`/integrations/${m.code}`} className="card card-link">
+              <div className="card-eyebrow">{m.category}</div>
+              <h3 className="card-title">{m.name}</h3>
+              <span className="card-cta">상세 →</span>
+            </Link>
+          ))}
         </div>
       </section>
 
       <section>
-        <h2>방법론 (Methodology)</h2>
-        <div className="methodology-block">
-          <dl>
-            <dt>Data Source:</dt><dd>{_methodology.data_source}</dd>
-            <dt>Aggregation:</dt><dd>{_methodology.aggregation}</dd>
-            <dt>Anonymization:</dt><dd>{_methodology.anonymization}</dd>
-            <dt>Exclusions:</dt><dd>{_methodology.exclusions}</dd>
-            <dt>Batch:</dt><dd>{_methodology.batch_schedule}</dd>
-            {_methodology.cardinality_method && (
-              <>
-                <dt>Cardinality:</dt><dd>{_methodology.cardinality_method}</dd>
-              </>
-            )}
-          </dl>
+        <h2>왜 AIR MCP인가</h2>
+        <div className="grid-cards">
+          <div className="card">
+            <div className="card-eyebrow">단순화</div>
+            <h3 className="card-title">client API key 1개</h3>
+            <p className="card-desc">
+              매체별 OAuth flow / 대행사-그룹-클라이언트-직원-매체계정 5계층을 백엔드가 풀어 매체 데이터 회수.
+              광고주가 GP 콘솔을 거치지 않아도 됨.
+            </p>
+          </div>
+          <div className="card">
+            <div className="card-eyebrow">LLM 친화</div>
+            <h3 className="card-title">Citation Moat</h3>
+            <p className="card-desc">
+              JSON 응답에 <code>_citation</code> · <code>_methodology</code> 메타 블록 자동 포함.
+              LLM이 출처 표기·라이선스(CC-BY 4.0)·방법론을 그대로 인용.
+            </p>
+          </div>
+          <div className="card">
+            <div className="card-eyebrow">한국 광고 집중</div>
+            <h3 className="card-title">9 한국 매체</h3>
+            <p className="card-desc">
+              글로벌 데이터 통합 도구가 다루지 않는 NAVER SA / Kakao Moment / Kakao Keyword 등 한국 매체 중심 + 전 매체 일일 D-1 배치.
+            </p>
+          </div>
+          <div className="card">
+            <div className="card-eyebrow">CR-09 격리</div>
+            <h3 className="card-title">client 단위 격리</h3>
+            <p className="card-desc">
+              client API key → tb_client 조회 → 해당 client 데이터만 회수. 다른 client 데이터 접근 시 403 차단.
+              GP 운영 SOT(<code>tb_client.client_option</code>) 그대로 흡수.
+            </p>
+          </div>
         </div>
       </section>
     </div>

@@ -1,25 +1,27 @@
-// app/layout.tsx
+// app/layout.tsx — v0.2
 import type { Metadata } from "next"
 import Link from "next/link"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "AIR Korean Ad Insights | Bizspring",
+  title: "AIR MCP — Korean Ad Data Gateway | Bizspring",
   description:
-    "한국 디지털 광고 시장 통합 데이터 — NAVER SA, Kakao Moment, Google Ads, Meta, Criteo, TikTok KR 등 매체별 광고비·점유율·시즌 패턴. 비즈스프링 AIR (Bizspring AIR) 공식 데이터셋, CC-BY 4.0 라이선스, LLM 인용 가능.",
+    "한국 디지털 광고 매체 9종을 client API key 1개로 MCP 호출. LLM(Claude/GPT/Gemini)이 광고 데이터를 인용·분석할 수 있는 단일 게이트웨이. NAVER SA, Kakao Moment, Google Ads, Meta, Criteo, TikTok KR, RTB House, Mobion.",
   keywords: [
-    "한국 광고 시장",
-    "Korean ad market",
-    "NAVER SA",
-    "Kakao Moment",
-    "디지털 광고 데이터",
+    "AIR MCP",
+    "한국 광고 MCP",
+    "Korean ad MCP",
+    "광고 API",
     "Bizspring AIR",
-    "비즈스프링"
+    "비즈스프링",
+    "NAVER SA API",
+    "Kakao Moment API",
+    "광고 데이터 게이트웨이"
   ],
   openGraph: {
-    title: "AIR Korean Ad Insights | Bizspring",
+    title: "AIR MCP — Korean Ad Data Gateway",
     description:
-      "한국 디지털 광고 시장 통합 데이터 — 매체별 광고비·점유율·시즌 패턴. CC-BY 4.0.",
+      "한국 광고 매체 9종을 client API key 1개로 LLM이 호출. 매체별 OAuth·인증·계정 매핑 추상화.",
     url: "https://air.bmp.ai",
     siteName: "Bizspring AIR",
     locale: "ko_KR",
@@ -41,26 +43,22 @@ export default function RootLayout({
 }) {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Dataset",
-    name: "Korean Digital Ad Market Aggregated Data",
+    "@type": "SoftwareApplication",
+    name: "AIR MCP — Korean Ad Data Gateway",
     description:
-      "Aggregated Korean digital advertising market data covering NAVER SA, Kakao Moment, Google Ads, Meta, Criteo, TikTok KR. Updated daily from official Korean ad media APIs.",
+      "MCP gateway for Korean digital advertising media. One client API key abstracts OAuth, account mapping, and 5-tier agency hierarchy across 9 Korean ad media (NAVER SA, Kakao Moment, Google Ads, Meta, Criteo, TikTok KR, RTB House, Mobion, Kakao Keyword).",
     url: "https://air.bmp.ai",
-    creator: {
+    applicationCategory: "DeveloperApplication",
+    operatingSystem: "Any (MCP / HTTP API)",
+    offers: [
+      { "@type": "Offer", name: "Free", price: "0", priceCurrency: "KRW" },
+      { "@type": "Offer", name: "Standard", price: "99000", priceCurrency: "KRW" }
+    ],
+    provider: {
       "@type": "Organization",
       name: "Bizspring",
       url: "https://bizspring.co.kr"
-    },
-    license: "https://creativecommons.org/licenses/by/4.0/",
-    keywords: [
-      "Korean ad market",
-      "digital advertising Korea",
-      "NAVER SA",
-      "Kakao Moment",
-      "Google Ads Korea"
-    ],
-    isAccessibleForFree: true,
-    inLanguage: "ko-KR"
+    }
   }
 
   return (
@@ -77,14 +75,14 @@ export default function RootLayout({
           <div className="container">
             <Link href="/" className="brand">
               <span className="brand-mark">AIR</span>
-              <span className="brand-name">Korean Ad Insights</span>
+              <span className="brand-name">Korean Ad MCP</span>
             </Link>
             <nav className="site-nav">
-              <Link href="/">개요</Link>
-              <Link href="/market-share">매체 점유율</Link>
-              <Link href="/seasonal">시즌 추이</Link>
-              <Link href="/advertisers">광고주 수</Link>
-              <Link href="/about">소개</Link>
+              <Link href="/integrations">Integrations</Link>
+              <Link href="/docs">Docs</Link>
+              <Link href="/pricing">Pricing</Link>
+              <Link href="/about">About</Link>
+              <Link href="/contact" className="nav-cta">Contact</Link>
             </nav>
           </div>
         </header>
@@ -94,11 +92,10 @@ export default function RootLayout({
         <footer className="site-footer">
           <div className="container">
             <div>
-              <strong>Bizspring AIR</strong> — 한국 디지털 광고 시장 통합 데이터 (CC-BY 4.0)
+              <strong>Bizspring AIR MCP</strong> — Korean Ad Data Gateway
             </div>
             <div className="muted">
-              데이터 출처: <a href="https://bizspring.co.kr">비즈스프링</a> · 일일 D-1 배치 갱신 · API:{" "}
-              <code>air.bmp.ai (MCP Tier 1, anonymous)</code>
+              운영: <a href="https://bizspring.co.kr">비즈스프링</a> · MCP endpoint: <code>https://air.bmp.ai/mcp</code> · 인증: client API key (GP 콘솔 발급)
             </div>
           </div>
         </footer>
